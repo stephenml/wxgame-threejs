@@ -30,7 +30,7 @@
 
 `Oimojs` : https://github.com/lo-th/Oimo.js
 
-引入方式同 `Threejs`
+引入方式同 `Threejs`
 
 ---
 
@@ -40,7 +40,7 @@
 
 2. ~~`ammo.js` 的体积太大，而微信小游戏的包大小限制为 `4M` , 占用了 `1/3` 的大小 （`Threejs` 的占用大小约为 `600k`）~~
 
-3. 使用 `Oimojs` 手机预览时，如果有 `console.log( OimoObject )` 类似操作，可能会造成无法渲染，解决办法就是删除这行调试代码
+3. 使用 `Oimojs` 手机预览时，如果有 `console.log( OimoObject )` 类似操作，可能会造成无法渲染，解决办法就是删除这行调试代码
 
 ---
 
