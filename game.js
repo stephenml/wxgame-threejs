@@ -1,5 +1,5 @@
-import './js/libs/weapp-adapter/index'
-import './js/libs/symbol'
+import './libs/weapp-adapter/index'
+import './libs/symbol'
 
 import Main from './js/main'
 

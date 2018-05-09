@@ -1,17 +1,40 @@
-import * as THREE from 'libs/threejs/three.min'
-import * as OIMO from 'libs/threejs/plugins/oimo.min'
+import * as THREE from '../libs/threejs/three.min'
+import * as OIMO from '../libs/threejs/plugins/oimo.min'
 
-import 'libs/threejs/controls/OrbitControls'
+import '../libs/threejs/controls/OrbitControls'
 
-let ctx = canvas.getContext('webgl')
+// 上屏Canvas
+let cvs = canvas.getContext('2d')
 
+// 屏幕宽高
 const winWidth = window.innerWidth
 const winHeight = window.innerHeight
 const cameraAspect = winWidth / winHeight
 
+// 设备像素比
+let ratio = wx.getSystemInfoSync().pixelRatio
+
+// 游戏Canvas
+let gameCanvas = wx.createCanvas()
+// 缩放到像素比 使之高清
+gameCanvas.width = winWidth * ratio
+gameCanvas.height = winHeight * ratio
+// 使用webgl绘制
+let webgl = gameCanvas.getContext('webgl')
+
+// 开放域
+let open = wx.getOpenDataContext()
+
+// 开放域canvas
+let sharedCanvas = open.canvas
+// 缩放到像素比 使之高清
+sharedCanvas.width = winWidth * ratio
+sharedCanvas.height = winHeight * ratio
+
+// 网格数量
 const length = 20
 
-const bastUrl = 'https://raw.githubusercontent.com/stephenml/wegame-threejs/master/model'
+const bastUrl = 'https://raw.githubusercontent.com/stephenml/wegame-threejs/master/models'
 
 export default class Main {
   constructor() {
@@ -26,7 +49,7 @@ export default class Main {
     this.camera.position.y = 20
 
     // 渲染器  
-    this.renderer = new THREE.WebGLRenderer({ context: ctx, canvas: canvas })
+    this.renderer = new THREE.WebGLRenderer({ context: webgl, canvas: canvas })
     this.renderer.shadowMap.enabled = true
     this.renderer.setSize(winWidth, winHeight)
     this.renderer.setClearColor(0xFFFFFF, 1)
@@ -34,14 +57,21 @@ export default class Main {
     this.renderer.setPixelRatio(window.devicePixelRatio)
 
     // 摄像机控制器
-    this.controls = new THREE.OrbitControls(this.camera)
-    this.controls.addEventListener('change', () => {
-      this.renderer.render(this.scene, this.camera)
-    })
+    // this.controls = new THREE.OrbitControls(this.camera)
+    // this.controls.addEventListener('change', () => {
+    //   this.renderer.render(this.scene, this.camera)
+    // })
 
     // Oimo物理世界
     this.world = new OIMO.World({ worldscale: 1 })
 
+    open.postMessage({
+      type: 'friend',
+      key: 'score',
+      openId: 'oyJjl5dYt5dB4-jS5ifbsbToVYZ0'
+    })
+    this.ranking = true
+    
     // 初始化
     this.boxs = []
     this.boxBodys = []
@@ -127,11 +157,11 @@ export default class Main {
         this.loop()
       },
       // 进度条 小游戏内无效
-      (xhr) => {
+      xhr => {
         console.log(`${(xhr.loaded / xhr.total * 100)}% 已载入`)
       },
       // 载入出错
-      (error) => {
+      error => {
         console.log(`载入出错: ${error}`)
       }
     )
@@ -145,7 +175,7 @@ export default class Main {
     for (let i = 0; i < length; i++) {
       this.boxs[i].position.copy(this.boxBodys[i].getPosition())
       this.boxs[i].quaternion.copy(this.boxBodys[i].getQuaternion())
-      
+
       this.models[i].position.copy(this.modelBodys[i].getPosition())
       this.models[i].quaternion.copy(this.modelBodys[i].getQuaternion())
     }
@@ -155,8 +185,20 @@ export default class Main {
     //   console.log('contact...')
     // }
 
-    // 渲染
+    // threejs渲染
     this.renderer.render(this.scene, this.camera)
+
+    // 清除上屏Canvas
+    cvs.clearRect(0, 0, winWidth * ratio, winHeight * ratio)
+
+    // 将游戏Canvas绘制到上屏Canvas
+    cvs.drawImage(gameCanvas, 0, 0)
+
+    if (this.ranking) {
+      // 绘制排行榜
+      cvs.drawImage(sharedCanvas, 0, 0)
+    }
+
     window.requestAnimationFrame(this.loop.bind(this), canvas)
   }
 }
