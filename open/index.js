@@ -110,7 +110,7 @@ function initRankingItems(items) {
     // 排行榜绘制完成
     rankingStatus = true
   } else {
-    console.error('无找到排行榜数据')
+    console.error('未找到排行榜数据')
   }
  
 }
