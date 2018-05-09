@@ -12,7 +12,7 @@ const winHeight = window.innerHeight
 const cameraAspect = winWidth / winHeight
 
 // 设备像素比
-let ratio = wx.getSystemInfoSync().pixelRatio
+let ratio = window.devicePixelRatio
 
 // 游戏Canvas
 let gameCanvas = wx.createCanvas()
@@ -49,12 +49,12 @@ export default class Main {
     this.camera.position.y = 20
 
     // 渲染器  
-    this.renderer = new THREE.WebGLRenderer({ context: webgl, canvas: canvas })
+    this.renderer = new THREE.WebGLRenderer({ context: webgl, canvas: canvas, antialias: true })
     this.renderer.shadowMap.enabled = true
     this.renderer.setSize(winWidth, winHeight)
     this.renderer.setClearColor(0xFFFFFF, 1)
-    // 抗锯齿
-    this.renderer.setPixelRatio(window.devicePixelRatio)
+    // 设置设备像素比达到抗锯齿效果
+    this.renderer.setPixelRatio(ratio)
 
     // 摄像机控制器
     // this.controls = new THREE.OrbitControls(this.camera)
