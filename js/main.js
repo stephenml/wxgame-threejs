@@ -34,8 +34,6 @@ sharedCanvas.height = winHeight * ratio
 // 网格数量
 const length = 20
 
-const bastUrl = 'https://raw.githubusercontent.com/stephenml/wegame-threejs/master/models'
-
 export default class Main {
   constructor() {
     // 场景  
@@ -104,7 +102,7 @@ export default class Main {
     })
 
     // 载入json模型
-    new THREE.JSONLoader().load(`${bastUrl}/sphere.json`,
+    new THREE.JSONLoader().load(`models/sphere.json`,
       (geometry, materials) => {
         geometry.center()
         // 盒子材质
