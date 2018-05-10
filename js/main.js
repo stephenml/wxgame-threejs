@@ -102,7 +102,7 @@ export default class Main {
     })
 
     // 载入json模型
-    new THREE.JSONLoader().load(`models/sphere.json`,
+    new THREE.JSONLoader().load('models/sphere.json',
       (geometry, materials) => {
         geometry.center()
         // 盒子材质
