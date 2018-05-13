@@ -3,8 +3,10 @@ import * as OIMO from '../libs/threejs/plugins/oimo.min'
 
 import '../libs/threejs/controls/OrbitControls'
 
+import UI from './ui'
+
 // 上屏Canvas
-let cvs = canvas.getContext('2d')
+let webgl = canvas.getContext('webgl')
 
 // 屏幕宽高
 const winWidth = window.innerWidth
@@ -14,45 +16,33 @@ const cameraAspect = winWidth / winHeight
 // 设备像素比
 let ratio = window.devicePixelRatio
 
-// 游戏Canvas
-let gameCanvas = wx.createCanvas()
-// 缩放到像素比 使之高清
-gameCanvas.width = winWidth * ratio
-gameCanvas.height = winHeight * ratio
-// 使用webgl绘制
-let webgl = gameCanvas.getContext('webgl')
-
-// 开放域
-let open = wx.getOpenDataContext()
-
-// 开放域canvas
-let sharedCanvas = open.canvas
-// 缩放到像素比 使之高清
-sharedCanvas.width = winWidth * ratio
-sharedCanvas.height = winHeight * ratio
+// 游戏UI
+let GameUI = new UI()
 
 // 网格数量
 const length = 20
 
 export default class Main {
   constructor() {
-    // 场景  
-    this.scene = new THREE.Scene();
-    this.scene.add(new THREE.PointLight(0x8A8A8A))
-    this.scene.add(new THREE.AmbientLight(0xFFFFFF))
-
-    // 摄像机
-    this.camera = new THREE.PerspectiveCamera(75, cameraAspect, .1, 1000)
-    this.camera.position.z = 30
-    this.camera.position.y = 20
-
     // 渲染器  
-    this.renderer = new THREE.WebGLRenderer({ context: webgl, canvas: canvas, antialias: true })
+    this.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
     this.renderer.shadowMap.enabled = true
     this.renderer.setSize(winWidth, winHeight)
     this.renderer.setClearColor(0xFFFFFF, 1)
     // 设置设备像素比达到抗锯齿效果
     this.renderer.setPixelRatio(ratio)
+    // 由于使用多个不同的摄像机 这里关闭自动清除
+    this.renderer.autoClear = false
+
+    // 场景  
+    this.scene = new THREE.Scene()
+    this.scene.add(new THREE.PointLight(0x8A8A8A))
+    this.scene.add(new THREE.AmbientLight(0xFFFFFF))
+
+    // 摄像机
+    this.camera = new THREE.PerspectiveCamera(75, cameraAspect, .1, 1000)
+    this.camera.position.z = 50
+    this.camera.position.y = 20
 
     // 摄像机控制器
     // this.controls = new THREE.OrbitControls(this.camera)
@@ -63,13 +53,25 @@ export default class Main {
     // Oimo物理世界
     this.world = new OIMO.World({ worldscale: 1 })
 
-    open.postMessage({
-      type: 'friend',
-      key: 'score',
-      openId: 'oyJjl5dYt5dB4-jS5ifbsbToVYZ0'
+    // 显示排行榜
+    GameUI.showRanking()
+
+    // setTimeout(() => {
+    //   GameUI.hideRanking()
+    // }, 6000)
+
+    setInterval(() => {
+      GameUI.updateRanking()
+    }, 2000)
+
+    wx.onTouchMove(event => {
+      GameUI.updateRanking()
     })
-    this.ranking = true
-    
+
+    wx.onTouchEnd(event => {
+      GameUI.updateRanking()
+    })
+
     // 初始化
     this.boxs = []
     this.boxBodys = []
@@ -183,19 +185,12 @@ export default class Main {
     //   console.log('contact...')
     // }
 
-    // threejs渲染
+    // 关闭了渲染器的自动清除 这里需要手动清除
+    this.renderer.clear()
+    // 渲染游戏场景
     this.renderer.render(this.scene, this.camera)
-
-    // 清除上屏Canvas
-    cvs.clearRect(0, 0, winWidth * ratio, winHeight * ratio)
-
-    // 将游戏Canvas绘制到上屏Canvas
-    cvs.drawImage(gameCanvas, 0, 0)
-
-    if (this.ranking) {
-      // 绘制排行榜
-      cvs.drawImage(sharedCanvas, 0, 0)
-    }
+    // 渲染UI
+    this.renderer.render(GameUI.scene, GameUI.camera)
 
     window.requestAnimationFrame(this.loop.bind(this), canvas)
   }
