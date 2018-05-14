@@ -11,23 +11,18 @@ let instance
  * 统一UI管理
  */
 export default class UI {
-  constructor() {
+  constructor(renderer) {
     if (instance) {
       return instance
     }
     instance = this
 
-    // 开放域
-    this.open = wx.getOpenDataContext()
-
-    // 开放域canvas
-    this.sharedCanvas = this.open.canvas
-    // 缩放到像素比 使之高清
-    this.sharedCanvas.width = GameParams.width * GameParams.ratio
-    this.sharedCanvas.height = GameParams.height * GameParams.ratio
+    // 渲染器
+    this.renderer = renderer
 
     // UI场景
     this.scene = new THREE.Scene()
+
     // 使用正交相机绘制2D
     this.camera = new THREE.OrthographicCamera(GameParams.width / -2, GameParams.width / 2, GameParams.height / 2, GameParams.height / -2, 0, 10000)
     
@@ -39,6 +34,15 @@ export default class UI {
    * 初始化排行榜
    */
   initRanking() {
+    // 开放域
+    this.open = wx.getOpenDataContext()
+
+    // 开放域canvas
+    this.sharedCanvas = this.open.canvas
+    // 缩放到像素比 使之高清
+    this.sharedCanvas.width = GameParams.width * GameParams.ratio
+    this.sharedCanvas.height = GameParams.height * GameParams.ratio
+
     this.rankingTexture = new THREE.CanvasTexture(this.sharedCanvas)
     // TODO 关键代码
     this.rankingTexture.minFilter = this.rankingTexture.magFilter = THREE.LinearFilter
@@ -76,6 +80,13 @@ export default class UI {
    */
   hideRanking() {
     this.scene.remove(this.ranking)
+  }
+
+  /**
+   * 渲染UI
+   */
+  render() {
+    this.renderer.render(this.scene, this.camera)
   }
   
 }
