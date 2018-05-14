@@ -1,13 +1,12 @@
-// 子域Canvas
-let sharedCanvas = wx.getSharedCanvas()
-let cvs = sharedCanvas.getContext('2d')
-
-// 设备像素比
-let ratio = wx.getSystemInfoSync().pixelRatio
-
 // 设备屏幕宽高
 let width = wx.getSystemInfoSync().screenWidth
 let height = wx.getSystemInfoSync().screenHeight
+// 设备像素比
+let ratio = wx.getSystemInfoSync().pixelRatio
+
+// 子域Canvas
+let sharedCanvas = wx.getSharedCanvas()
+let cvs = sharedCanvas.getContext('2d')
 
 // 排行榜详细
 let itemCanvas = wx.createCanvas()

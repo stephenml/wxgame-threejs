@@ -3,19 +3,11 @@ import * as OIMO from '../libs/threejs/plugins/oimo.min'
 
 import '../libs/threejs/controls/OrbitControls'
 
+import Params from './params'
 import UI from './ui'
 
-// 上屏Canvas
-let webgl = canvas.getContext('webgl')
-
-// 屏幕宽高
-const winWidth = window.innerWidth
-const winHeight = window.innerHeight
-const cameraAspect = winWidth / winHeight
-
-// 设备像素比
-let ratio = window.devicePixelRatio
-
+// 游戏参数
+let GameParams = new Params()
 // 游戏UI
 let GameUI = new UI()
 
@@ -24,13 +16,16 @@ const length = 20
 
 export default class Main {
   constructor() {
+    // TODO 不加这一句打开可能会短暂黑屏
+    // canvas.getContext('webgl')
+
     // 渲染器  
     this.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true })
     this.renderer.shadowMap.enabled = true
-    this.renderer.setSize(winWidth, winHeight)
+    this.renderer.setSize(GameParams.width, GameParams.height)
     this.renderer.setClearColor(0xFFFFFF, 1)
     // 设置设备像素比达到抗锯齿效果
-    this.renderer.setPixelRatio(ratio)
+    this.renderer.setPixelRatio(GameParams.ratio)
     // 由于使用多个不同的摄像机 这里关闭自动清除
     this.renderer.autoClear = false
 
@@ -40,7 +35,7 @@ export default class Main {
     this.scene.add(new THREE.AmbientLight(0xFFFFFF))
 
     // 摄像机
-    this.camera = new THREE.PerspectiveCamera(75, cameraAspect, .1, 1000)
+    this.camera = new THREE.PerspectiveCamera(75, GameParams.cameraAspect, .1, 10000)
     this.camera.position.z = 50
     this.camera.position.y = 20
 
