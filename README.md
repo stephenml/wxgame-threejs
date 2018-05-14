@@ -1,10 +1,10 @@
 # `Threejs` 开发微信小游戏
 
-本项目是一个使用 `Threejs` 开发微信小游戏的示例， 使用了 ~~`Physijs`~~  `Oimojs` 库用作物理效果
+本项目是一个使用 `Threejs` 开发微信小游戏的 `'完整'` 示例，不定期更新
 
 ---
 
-# 使用的库
+## 使用的库
 
 `weapp-adapter` : https://github.com/finscn/weapp-adapter
 
@@ -34,7 +34,7 @@
 
 ---
 
-# 遇到的问题
+## 遇到的问题
 
 1. ~~使用 `Physijs` 示例中的 `ammo.js` 开发工具可以正常模拟，手机预览会报错，暂时还没有进行适配~~
 
@@ -44,11 +44,11 @@
 
 4. 微信小游戏离屏 `Canvas` 使用 `webgl` 存在 `bug` 无法渲染
 
-5. 由于 `子域` 的限制，无法得知 `子域` 的状态，需要不同的更新渲染 `子域` 的内容，在绘制 `子域` 内容时会存在很大的性能消耗，掉帧严重
+5. 由于 `子域` 的限制，无法得知 `子域` 的状态，需要不停的更新渲染 `子域` 的内容，在绘制 `子域` 内容时会存在很大的性能消耗，掉帧严重
 
 ---
 
-# 更新日志
+## 更新日志
 
 ### 2018年05月05日
 ```
@@ -68,4 +68,20 @@
 ### 2018年05月13日
 ```
 > 弃用离屏 `Canvas` 渲染 `webgl` ，改用新的解决方案，详见 `ui` 类
+```
+
+---
+
+## LICENSE
+
+```
+The MIT License (MIT)
+
+Copyright © 2018 stephenml(Stephen.Yang)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
