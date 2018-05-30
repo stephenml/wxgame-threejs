@@ -10,7 +10,7 @@
 	"compileType": "game",
 	"libVersion": "2.0.2",
 	"appid": "touristappid",
-	"projectname": "wegame-threejs",
+	"projectname": "wxgame-threejs",
 	"isGameTourist": true,
 	"condition": {
 		"search": {
